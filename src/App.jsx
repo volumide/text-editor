@@ -23,6 +23,7 @@ function App() {
   const [toolbarOptions] = useState([[{ "size": ["small", false, "large", "huge"] }], ["link", "image"], [{ "align": "" }, { "align": "right" }, { "align": "center" }], ["bold", "italic"], [{ "list": "ordered" }, { "list": "bullet" }, "blockquote"]])
 
   const handleChange = (dt) => {
+    console.log(dt)
     setFile(dt)
   }
 
@@ -144,7 +145,7 @@ function App() {
                     </label>
                     <FileUploader handleChange={handleChange} name="file" types={fileTypes} id="upload" className="py-[24px]">
                       <div className="p-[50px] border border-dashed border-[#6CAA7D] rounded text-center" role="button">
-                        <span className="border rounded-[4px] p-3 border-[#6CAA7D]">Import Image from Device</span>
+                        <span className="border rounded-[4px] p-3 border-[#6CAA7D]">{file ? file.name : "Import Image from Device"}</span>
                       </div>
                     </FileUploader>
                   </div>
@@ -160,7 +161,7 @@ function App() {
                   </div>
                   <div className="py-[16px]">
                     <label htmlFor="provider text-[#333333]"> URL </label>
-                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" onChange={(e) => setVideoLink(e.target.value)} />
+                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" onChange={(e) => setVideoLink(e.target.value)} placeholder="Youtube Url" />
                   </div>
                 </div>
               )}
@@ -169,16 +170,28 @@ function App() {
               {modalType === "social" && (
                 <div>
                   <div className="py-[16px]">
-                    <label htmlFor="provider text-[#333333]"> SOCIAL MEDIA PLATFORM </label>
+                    <label htmlFor="platform" className="text-[#333333]">
+                      SOCIAL MEDIA PLATFORM
+                    </label>
+                    <select name="" id="provider" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]">
+                      <option value=""></option>
+                      <option value="facebook">FACEBOOK</option>
+                      <option value="tiktok">TIKTOK</option>
+                      <option value="instagram">INSTAGRAM</option>
+                    </select>
+                    {/* <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" /> */}
+                  </div>
+                  <div className="py-[16px]">
+                    <label htmlFor="provider" className="text-[#333333]">
+                      URL
+                    </label>
                     <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" />
                   </div>
                   <div className="py-[16px]">
-                    <label htmlFor="provider text-[#333333]"> URL </label>
-                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" />
-                  </div>
-                  <div className="py-[16px]">
-                    <label htmlFor="provider text-[#333333]"> CODE </label>
-                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" onChange={(e) => setVideoLink(e.target.value)} />
+                    <label htmlFor="provider" className="text-[#333333]">
+                      CODE
+                    </label>
+                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" onChange={(e) => setVideoLink(e.target.value)} placeholder="Embed code" />
                   </div>
                 </div>
               )}
