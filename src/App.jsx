@@ -1,6 +1,6 @@
 import { useState, useRef } from "react"
 
-import ReactQuill, { Quill } from "react-quill"
+import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import "./App.css"
 import { FileUploader } from "react-drag-drop-files"
@@ -48,18 +48,24 @@ function App() {
     }
 
     if (modalType === "video") {
-      const videoId = extractVideoId(videoLink)
-      const videoHtml = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen  width="100%" height="300px" ></iframe>`
+      let videoId = ""
+      let videoHtml = ""
+      if (videoLink.includes("youtube")) {
+        videoId = extractVideoId(videoLink)
+        videoHtml = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen  width="100%" height="300px" ></iframe>`
+      } else {
+        videoHtml = `<iframe src="${videoLink}" frameborder="0" allowfullscreen  width="100%" height="300px" ></iframe>`
+      }
       const range = q.getSelection(true)
       q.clipboard.dangerouslyPasteHTML(range.index, videoHtml)
-
-      // q.insertEmbed(range, "video", videoLink)
     }
 
-    // https://www.youtube.com/watch?v=9_X8XV2X9I4
+    if (modalType === "social") {
+      const range = q.getSelection(true)
+      q.clipboard.dangerouslyPasteHTML(range.index, videoLink)
+    }
 
     q.insertText(range + 1, "\n", "user")
-    // q.setSelector(range)
     q.focus()
     setModal(false)
   }
@@ -172,7 +178,7 @@ function App() {
                   </div>
                   <div className="py-[16px]">
                     <label htmlFor="provider text-[#333333]"> CODE </label>
-                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" />
+                    <input type="text" className="p-3 rounded border border=[#E7F1E9] block w-full my-1 bg-[#FAFAFA]" onChange={(e) => setVideoLink(e.target.value)} />
                   </div>
                 </div>
               )}
