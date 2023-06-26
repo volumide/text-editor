@@ -12,6 +12,7 @@ import { FileUploader } from "react-drag-drop-files"
 
 function App() {
   const [content, setContent] = useState("")
+  const MAX = 1000
   const [dropDown, setDropDown] = useState(false)
   const fileTypes = ["JPG", "PNG", "GIF", "JPEGs"]
   const [modal, setModal] = useState(false)
@@ -20,7 +21,7 @@ function App() {
   const [modalType, setModalType] = useState("")
   const [videoLink, setVideoLink] = useState("")
 
-  const [toolbarOptions] = useState([[{ "size": ["small", false, "large", "huge"] }], ["link", "image"], [{ "align": "" }, { "align": "right" }, { "align": "center" }], ["bold", "italic"], [{ "list": "ordered" }, { "list": "bullet" }, "blockquote"]])
+  const modules = { toolbar: [[{ "size": ["small", false, "large", "huge"] }], ["link", "image"], [{ "align": "" }, { "align": "right" }, { "align": "center" }], ["bold", "italic"], [{ "list": "ordered" }, { "list": "bullet" }, "blockquote"]] }
 
   const handleChange = (dt) => {
     console.log(dt)
@@ -80,53 +81,65 @@ function App() {
 
   const hideModal = () => setModal(false)
 
+  const handleTextChange = (value) => {
+    if (value.length <= MAX) {
+      setContent(value)
+    }
+  }
+
+  const removeHtml = (html) => {
+    const tempDiv = document.createElement("div")
+    tempDiv.innerHTML = html
+    return tempDiv.textContent || tempDiv.innerText || ""
+  }
+
   return (
     <>
-      <div className="w-2/5 mx-auto border  h-[900px] rounded-[4px] border-[#E7F1E9] my-10 overflow-auto">
-        <div className="py-7 border-b border-b-[#E7F1E9]"></div>
-        <div className="p-5">
-          <h3 className="py-[12px] text-[24px] text-[#343E37]">This is the title</h3>
-          <ReactQuill
-            ref={quillRef}
-            className="my-[16px] "
-            value={content}
-            onChange={setContent}
-            placeholder="Write here..."
-            // placeholder="Content here"
-            modules={{
-              toolbar: toolbarOptions
-            }}
-          />
-          <button className="block" onClick={showOption}>
-            <i className="fa-solid fa-circle-plus text-[#E7F1E9] text-[24px] "></i>
-          </button>
-          {dropDown ? (
-            <div className="border rounded mt-[10px] w-[80%] rounded-[4px] bg-white options text-[#010E05]">
-              <div onClick={showModal("picture")} className="flex gap-3 items-center p-3" role="button">
-                <i className="fa-solid fa-image block"></i>
-                <span className="block">
-                  Picture
-                  <small className="block text-[#343E37]">jpeg,png</small>
-                </span>
-              </div>
-              <div onClick={showModal("video")} className="flex gap-3 items-center p-3" role="button">
-                <i className="fa-solid fa-image block"></i>
-                <span className="block text-[#343E37]">
-                  Video
-                  <small className="block">Embed a youtube video</small>
-                </span>
-              </div>
-              <div onClick={showModal("social")} className="flex gap-3 items-center p-3" role="button">
-                <i className="fa-solid fa-image block"></i>
-                <span className="block text-[#343E37]">
-                  Socials
-                  <small className="block">Embed a facebook link</small>
-                </span>
-              </div>
+      <div className="w-2/5 mx-auto my-10 rounded-[4px] overflow-hidden">
+        <div className=" mx-auto border h-[900px]   border-[#E7F1E9]  overflow-auto flex flex-col justify-between bg-[#FAFAFA]  ">
+          <div className="w-full">
+            <div className="py-7 border-b border-b-[#E7F1E9]"></div>
+            <div className="p-5">
+              <h3 className="py-[12px] text-[24px] text-[#343E37]">This is the title</h3>
+              <ReactQuill ref={quillRef} className="my-[16px] " value={content} onChange={handleTextChange} placeholder="Write here..." modules={modules} />
+              <button className="block p-3 h-[40px] w-[40px] flex items-center justify-center rounded-full  bg-[#E7F1E9]" onClick={showOption}>
+                <i className="fa-solid fa-plus text-black text-lg "></i>
+              </button>
+              {dropDown ? (
+                <div className="border rounded mt-[10px] w-[80%] rounded-[4px] bg-white options text-[#010E05]">
+                  <div onClick={showModal("picture")} className="flex gap-3 items-center p-3" role="button">
+                    <i className="fa-solid fa-image block"></i>
+                    <span className="block">
+                      Picture
+                      <small className="block text-[#343E37]">jpeg,png</small>
+                    </span>
+                  </div>
+                  <div onClick={showModal("video")} className="flex gap-3 items-center p-3" role="button">
+                    <i className="fa-solid fa-image block"></i>
+                    <span className="block text-[#343E37]">
+                      Video
+                      <small className="block">Embed a youtube video</small>
+                    </span>
+                  </div>
+                  <div onClick={showModal("social")} className="flex gap-3 items-center p-3" role="button">
+                    <i className="fa-solid fa-image block"></i>
+                    <span className="block text-[#343E37]">
+                      Socials
+                      <small className="block">Embed a facebook link</small>
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
-          ) : (
-            ""
-          )}
+          </div>
+          <div className="bg-white sticky bottom-0 p-2 text-right text-[#343E37]">
+            {removeHtml(content).length ? MAX - removeHtml(content).length : 0}/{MAX}
+          </div>
+        </div>
+        <div className="text-right">
+          <button className="bg-[#0A7227] text-white p-3 px-5 rounded my-[16px] ml-auto">Post</button>
         </div>
       </div>
       {modal && (
